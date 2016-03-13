@@ -100,21 +100,27 @@ def send_order(driver, order_url):
 
 if __name__ == '__main__':
     try:
+        print(datetime.datetime.now())
         display = Display(visible=0)
         display.start()
         driver = Firefox()
         driver.implicitly_wait(10)
+        print('login_to_facebook')
         login_to_facebook(driver)
+        print('login_to_hipmenu')
         login_to_hipmenu(driver)
+        print('get_order_url')
         order_url = get_order_url(driver)
+        print(order_url)
         message = 'Apetit => {} Order will be closed at 10:55. This is an automated message via https://github.com/g4b1nagy/hipmenu-autoorder'.format(order_url)
+        print('login_to_skype')
         login_to_skype(driver)
+        print('send_skype_message')
         send_skype_message(driver, message)
+        print('send_order')
         send_order(driver, order_url)
     except Exception as e:
-        print(datetime.datetime.now())
         print(traceback.format_exc())
-        print()
         if not config['TEST']:
             payload = {
                 'api_key': config['NEXMO']['api_key'],
