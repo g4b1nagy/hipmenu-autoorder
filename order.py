@@ -100,6 +100,12 @@ def send_order(driver, order_url):
 
 
 if __name__ == '__main__':
+    payload = {
+        'api_key': config['NEXMO']['api_key'],
+        'api_secret': config['NEXMO']['api_secret'],
+        'to': config['NEXMO']['phone_number'],
+        'from': 'hipmenu-autoorder',
+    }
     try:
         print(datetime.datetime.now())
         display = Display(visible=0, size=(1920, 1080))
@@ -108,33 +114,29 @@ if __name__ == '__main__':
         # Skype rejects Iceweasel; fuck Skype
         profile.set_preference('general.useragent.override', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.109 Safari/537.36')
         driver = Firefox(profile)
+        driver.set_window_size(1920, 1080)
         driver.maximize_window()
         driver.implicitly_wait(10)
-        print('login_to_facebook')
+        print('login to facebook')
         login_to_facebook(driver)
-        print('login_to_hipmenu')
+        print('login to hipmenu')
         login_to_hipmenu(driver)
-        print('get_order_url')
+        print('get order url')
         order_url = get_order_url(driver)
         print(order_url)
         message = 'Apetit => {} Order will be closed at 10:55. This is an automated message via https://github.com/g4b1nagy/hipmenu-autoorder'.format(order_url)
-        print('login_to_skype')
+        print('login to skype')
         login_to_skype(driver)
-        print('send_skype_message')
+        print('send skype message')
         send_skype_message(driver, message)
-        print('send_order')
+        print('send order')
         send_order(driver, order_url)
+        payload['text'] = 'hipMenu order sent. Good job!'
     except Exception as e:
         print(traceback.format_exc())
-        if not config['TEST']:
-            payload = {
-                'api_key': config['NEXMO']['api_key'],
-                'api_secret': config['NEXMO']['api_secret'],
-                'to': config['NEXMO']['phone_number'],
-                'from': 'hipmenu-autoorder',
-                'text': 'Error sending hipMenu order :(',
-            }
-            requests.get('https://rest.nexmo.com/sms/json', params=payload)
+        payload['text'] = 'Error sending hipMenu order :('
     finally:
+        if not config['TEST']:
+            requests.get('https://rest.nexmo.com/sms/json', params=payload)
         driver.quit()
         display.stop()
