@@ -69,6 +69,27 @@ def send_skype_message(driver, message):
     time.sleep(5)
 
 
+def send_order(driver, order_url):
+    now = datetime.datetime.now()
+    while now.hour < 10 && now.minute < 55:
+        time.sleep(60)
+        now = datetime.datetime.now()
+    driver.get(order_url)
+    time.sleep(5)
+    driver.find_element_by_css_selector('#h-cartsum-checkout').click()
+    time.sleep(5)
+    driver.find_element_by_css_selector('#h-checkout-delivery').click()
+    time.sleep(5)
+    driver.find_element_by_css_selector('#h-checkout-mainAddr').click()
+    time.sleep(5)
+    driver.find_element_by_css_selector('#h-checkout-kittyOptionNo').click()
+    time.sleep(5)
+    driver.find_element_by_css_selector('#h-checkout-mainTime').click()
+    time.sleep(5)
+    # driver.find_element_by_css_selector('#h-checkout-sendOrderBtn').click()
+    time.sleep(5)
+
+
 if __name__ == '__main__':
     try:
         driver = Firefox()
@@ -79,6 +100,7 @@ if __name__ == '__main__':
         message = 'Apetit => {} Order will be closed at 10:55. This is an automated message via https://github.com/g4b1nagy/hipmenu-autoorder'.format(order_url)
         login_to_skype(driver)
         send_skype_message(driver, message)
+        send_order(driver, order_url)
     except Exception as e:
         print(datetime.datetime.now())
         print(traceback.format_exc())
