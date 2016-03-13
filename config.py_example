@@ -22,3 +22,5 @@ NEXMO = {
     'api_secret': '',
     'phone_number': '40744444444',
 }
+
+TEST = True

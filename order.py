@@ -92,7 +92,8 @@ def send_order(driver, order_url):
     time.sleep(5)
     driver.find_element_by_css_selector('#h-checkout-mainTime').click()
     time.sleep(5)
-    # driver.find_element_by_css_selector('#h-checkout-sendOrderBtn').click()
+    if not config['TEST']:
+        driver.find_element_by_css_selector('#h-checkout-sendOrderBtn').click()
     time.sleep(5)
 
 
@@ -111,11 +112,12 @@ if __name__ == '__main__':
         print(datetime.datetime.now())
         print(traceback.format_exc())
         print()
-        payload = {
-            'api_key': config['NEXMO']['api_key'],
-            'api_secret': config['NEXMO']['api_secret'],
-            'to': config['NEXMO']['phone_number'],
-            'from': 'hipmenu-autoorder',
-            'text': 'Error sending hipMenu order :(',
-        }
-        # requests.get('https://rest.nexmo.com/sms/json', params=payload)
+        if not config['TEST']:
+            payload = {
+                'api_key': config['NEXMO']['api_key'],
+                'api_secret': config['NEXMO']['api_secret'],
+                'to': config['NEXMO']['phone_number'],
+                'from': 'hipmenu-autoorder',
+                'text': 'Error sending hipMenu order :(',
+            }
+            requests.get('https://rest.nexmo.com/sms/json', params=payload)
