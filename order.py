@@ -66,7 +66,8 @@ def send_skype_message(driver, message):
     xpath = '//span[contains(text(), "{}")]'.format(config['SKYPE']['conversation_title'])
     driver.find_element_by_xpath(xpath).click()
     time.sleep(5)
-    driver.find_element_by_css_selector('#textarea-bindings textarea').click()
+    # click on the last textarea
+    driver.find_elements_by_css_selector('#textarea-bindings textarea')[-1].click()
     time.sleep(5)
     ActionChains(driver).send_keys(message).send_keys('\n').perform()
     time.sleep(5)
