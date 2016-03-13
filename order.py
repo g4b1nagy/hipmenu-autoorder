@@ -4,6 +4,7 @@ import time
 import traceback
 
 import requests
+from pyvirtualdisplay import Display
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.action_chains import ActionChains
 
@@ -99,6 +100,8 @@ def send_order(driver, order_url):
 
 if __name__ == '__main__':
     try:
+        display = Display(visible=0)
+        display.start()
         driver = Firefox()
         driver.implicitly_wait(10)
         login_to_facebook(driver)
@@ -121,3 +124,6 @@ if __name__ == '__main__':
                 'text': 'Error sending hipMenu order :(',
             }
             requests.get('https://rest.nexmo.com/sms/json', params=payload)
+    finally:
+        driver.quit()
+        display.stop()
