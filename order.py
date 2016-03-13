@@ -71,7 +71,7 @@ def send_skype_message(driver, message):
 
 def send_order(driver, order_url):
     now = datetime.datetime.now()
-    while now.hour < 10 && now.minute < 55:
+    while now.hour < 10 and now.minute < 55:
         time.sleep(60)
         now = datetime.datetime.now()
     driver.get(order_url)
