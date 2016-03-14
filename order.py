@@ -129,14 +129,16 @@ if __name__ == '__main__':
         login_to_skype(driver)
         print('send skype message')
         send_skype_message(driver, message)
+        payload['text'] = 'hipMenu message sent. Good job!'
+        if not config['TEST']:
+            requests.get('https://rest.nexmo.com/sms/json', params=payload)
         print('send order')
         send_order(driver, order_url)
-        payload['text'] = 'hipMenu order sent. Good job!'
     except Exception as e:
         print(traceback.format_exc())
         payload['text'] = 'Error sending hipMenu order :('
-    finally:
         if not config['TEST']:
             requests.get('https://rest.nexmo.com/sms/json', params=payload)
+    finally:
         driver.quit()
         display.stop()
