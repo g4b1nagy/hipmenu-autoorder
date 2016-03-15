@@ -1,5 +1,25 @@
 # hipmenu-autoorder
+
 Create group orders and post them to Skype automagically
+
+
+### What's this? ###
+
+hipmenu-autoorder is a Selenium script that is used to automate the process of creating hipMenu group orders.
+
+
+### How does it work? ###
+
+The script opens up an instance of Firefox and then it:
+
+* logs into Facebook
+* logs into hipMenu, using the above Facebook account
+* creates a new group order URL
+* logs into Skype
+* posts the group order URL to the relevant Skype discussion
+* waits until 10:55 AM
+* sends the group order to the restaurant
+* and also sends some SMS alerts along the way
 
 
 ### Getting your hands dirty ###
