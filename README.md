@@ -1,6 +1,6 @@
 # hipmenu-autoorder
 
-Create group orders and post them to Skype automagically
+Create hipMenu group orders and post them to Skype automagically
 
 
 ### What's this? ###
@@ -32,5 +32,4 @@ The script opens up an instance of Firefox and then it:
 * pip install -r requirements.txt
 * cp config_example.py config.py
 * update the config.py file to suit your needs
-* crontab -e
-* 0 09 * * 1,2,3 /home/pi/hipmenu-autoorder/order.sh (run on Monday, Tuesday, Wednesday at 9 AM)
+* enjoy being lazy
