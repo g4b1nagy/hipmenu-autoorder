@@ -1,3 +1,5 @@
+CHROMEDRIVER_PATH = '/usr/lib/chromium-browser/chromedriver'
+
 FACEBOOK = {
     'email': '',
     'password': '',
