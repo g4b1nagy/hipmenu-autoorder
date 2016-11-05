@@ -5,7 +5,7 @@ import traceback
 
 import requests
 from pyvirtualdisplay import Display
-from selenium.webdriver import FirefoxProfile, Firefox
+from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 
 
@@ -116,13 +116,8 @@ if __name__ == '__main__':
         print(datetime.datetime.now())
         display = Display(visible=0, size=(1920, 1080))
         display.start()
-        profile = FirefoxProfile()
-        # Skype rejects Iceweasel
-        # fuck Skype, pretend we're using Chrome
-        profile.set_preference('general.useragent.override', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.109 Safari/537.36')
-        driver = Firefox(profile)
-        driver.set_window_size(1920, 1080)
-        driver.maximize_window()
+        driver = webdriver.Chrome(config['CHROMEDRIVER_PATH'])
+        driver.set_window_size(1366, 768)
         driver.implicitly_wait(10)
         print('login to facebook')
         login_to_facebook(driver)

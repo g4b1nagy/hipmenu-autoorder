@@ -24,6 +24,7 @@ The script opens up an instance of Firefox and then it:
 
 ### Getting your hands dirty ###
 
+* sudo apt-get install chromium-browser chromium-chromedriver
 * cd to a comfy location
 * git clone https://github.com/g4b1nagy/hipmenu-autoorder.git
 * cd hipmenu-autoorder/
