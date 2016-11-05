@@ -1,5 +1,6 @@
 import datetime
 import importlib
+import json
 import time
 import traceback
 
@@ -94,6 +95,14 @@ def send_order(driver, order_url):
     time.sleep(7)
 
 
+def extract_orders(driver):
+    driver.get('https://www.hipmenu.ro/#history/back/')
+    time.sleep(7)
+    driver.find_element_by_css_selector('#h-order-history-list-content div').click()
+    time.sleep(7)
+    return driver.execute_script(config['ORDERS_SCRIPT'])
+
+
 def send_sms(message):
     payload = {
         'api_key': config['NEXMO']['api_key'],
@@ -108,6 +117,10 @@ def send_sms(message):
 
 if __name__ == '__main__':
     try:
+        try:
+            os.remove('orders.json')
+        except:
+            pass
         print(datetime.datetime.now())
         display = Display(visible=0, size=(1366, 768))
         display.start()
@@ -130,6 +143,10 @@ if __name__ == '__main__':
         print('send order')
         send_order(driver, order_url)
         send_sms('hipMenu order sent.')
+        orders = extract_orders(driver)
+        print(orders)
+        with open('orders.json', 'w') as f:
+            f.write(json.dumps(orders))
     except Exception as e:
         print(traceback.format_exc())
         send_sms('Error sending hipMenu order.')
