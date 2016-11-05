@@ -117,10 +117,8 @@ def send_sms(message):
 
 if __name__ == '__main__':
     try:
-        try:
-            os.remove('orders.json')
-        except:
-            pass
+        with open('orders.json', 'w') as f:
+            f.write('[]')
         print(datetime.datetime.now())
         display = Display(visible=0, size=(1366, 768))
         display.start()
