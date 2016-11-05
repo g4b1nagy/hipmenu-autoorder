@@ -21,21 +21,17 @@ NEXMO = {
     'phone_number': '40744444444',
 }
 
-TEST = True
-
-orders_script = """
+ORDERS_SCRIPT = """
 var orders = [];
-var my_name = document.querySelector('#h-profilename').textContent;
-var name_tags = Array.prototype.slice.call(document.querySelectorAll('.container-white-rounded .header-left p'));
-var price_tags = Array.prototype.slice.call(document.querySelectorAll('.container-white-rounded .summary-total .value'));
-if (name_tags.length > price_tags.length) {
-    name_tags.splice(0, 1);
-}
-for (var i = 0; i < name_tags.length; i++) {
+var order_tags = document.querySelectorAll('.history-diners .container-marginTBMedium');
+for (var i = 0; i < order_tags.length; i++) {
+    var tds = order_tags[i].querySelectorAll('footer td');
     orders.push({
-        name: name_tags[i].textContent.replace('Selecțiile mele', my_name).trim(),
-        price: price_tags[i].textContent.trim(),
+        name: order_tags[i].querySelector('h4').textContent.trim(),
+        price: tds[tds.length - 1].textContent.trim(),
     });
 }
 return orders;
 """
+
+TEST = True
