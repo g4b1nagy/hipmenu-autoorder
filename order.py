@@ -25,10 +25,6 @@ def login_to_facebook(driver):
 def login_to_hipmenu(driver):
     driver.get('https://www.hipmenu.ro/')
     time.sleep(7)
-    # use the new version of hipMenu
-    driver.add_cookie({'name': 'hip_rollout', 'value': '2', 'path': '/'})
-    driver.refresh()
-    time.sleep(7)
     driver.find_element_by_css_selector('#h-profilelogin').click()
     time.sleep(7)
     driver.find_element_by_css_selector('#loginCtrl-facebookId').click()
@@ -36,17 +32,13 @@ def login_to_hipmenu(driver):
 
 
 def get_order_url(driver):
-    driver.find_element_by_css_selector('#h-addrListPicker-addressNameId').send_keys(config['HIPMENU']['delivery_address']['street'])
-    driver.find_element_by_css_selector('#h-addrListPicker-addressNumberId').send_keys(config['HIPMENU']['delivery_address']['number'])
-    driver.find_element_by_css_selector('#h-addrListPicker-btnFindRestaurantsId').click()
-    time.sleep(7)
     driver.get(config['HIPMENU']['restaurant_url'])
     time.sleep(7)
     driver.find_element_by_css_selector('#h-restInfoPanel-createGroupId').click()
     time.sleep(7)
-    driver.find_element_by_css_selector('#hd-grpEntry-left-submit3Id').click()
+    driver.find_element_by_css_selector('#hd-grpEntry-left-continueId').click()
     time.sleep(7)
-    order_url = driver.find_element_by_css_selector('#hd-grpEntry-left-urlId').get_attribute('value')
+    order_url = driver.find_element_by_css_selector('#hd-grpEntry-left-urlId b').text
     if order_url is None:
         raise ValueError('Invalid order URL')
     return order_url
@@ -56,15 +48,18 @@ def login_to_skype(driver):
     driver.get('https://web.skype.com/')
     time.sleep(7)
     driver.find_element_by_css_selector('#username').send_keys(config['SKYPE']['username'])
-    driver.find_element_by_css_selector('#password').send_keys(config['SKYPE']['password'])
-    driver.find_element_by_css_selector('#password').send_keys('\n')
+    driver.find_element_by_css_selector('#username').send_keys('\n')
+    time.sleep(7)
+    driver.find_element_by_css_selector('#i0118').send_keys(config['SKYPE']['password'])
+    driver.find_element_by_css_selector('#i0118').send_keys('\n')
     # Skype is slow, be patient with Skype
     time.sleep(25)
 
 
 def send_skype_message(driver, message):
-    xpath = '//span[contains(text(), "{}")]'.format(config['SKYPE']['conversation_title'])
-    driver.find_element_by_xpath(xpath).click()
+    for a in driver.find_elements_by_css_selector('a'):
+        if config['SKYPE']['conversation_title'] in a.text:
+            a.click()
     time.sleep(7)
     # click on the last textarea
     driver.find_elements_by_css_selector('#textarea-bindings textarea')[-1].click()

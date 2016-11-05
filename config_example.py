@@ -7,10 +7,6 @@ FACEBOOK = {
 
 HIPMENU = {
     'restaurant_url': 'https://www.hipmenu.ro/#p1/rg/cluj-prod/group/98254//',
-    'delivery_address': {
-        'street': 'Bulevardul 21 Decembrie 1989',
-        'number': '77',
-    },
 }
 
 SKYPE = {
