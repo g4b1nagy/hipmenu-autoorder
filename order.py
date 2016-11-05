@@ -144,6 +144,7 @@ if __name__ == '__main__':
         send_order(driver, order_url)
         send_sms('hipMenu order sent.')
         orders = extract_orders(driver)
+        orders.sort(key=lambda x: x['name'])
         print(orders)
         with open('orders.json', 'w') as f:
             f.write(json.dumps(orders))
