@@ -26,18 +26,18 @@ def login_to_facebook(driver):
 def login_to_hipmenu(driver):
     driver.get('https://www.hipmenu.ro/')
     time.sleep(7)
-    driver.find_element_by_css_selector('#h-profilelogin').click()
+    driver.execute_script('arguments[0].click()', driver.find_element_by_css_selector('#h-profilelogin'))
     time.sleep(7)
-    driver.find_element_by_css_selector('#loginCtrl-facebookId').click()
+    driver.execute_script('arguments[0].click()', driver.find_element_by_css_selector('#loginCtrl-facebookId'))
     time.sleep(7)
 
 
 def get_order_url(driver):
     driver.get(config['HIPMENU']['restaurant_url'])
     time.sleep(7)
-    driver.find_element_by_css_selector('#h-restInfoPanel-createGroupId').click()
+    driver.execute_script('arguments[0].click()', driver.find_element_by_css_selector('#h-restInfoPanel-createGroupId'))
     time.sleep(7)
-    driver.find_element_by_css_selector('#hd-grpEntry-left-continueId').click()
+    driver.execute_script('arguments[0].click()', driver.find_element_by_css_selector('#hd-grpEntry-left-continueId'))
     time.sleep(7)
     order_url = driver.find_element_by_css_selector('#hd-grpEntry-left-urlId b').text
     if order_url is None:
@@ -60,10 +60,10 @@ def login_to_skype(driver):
 def send_skype_message(driver, message):
     for a in driver.find_elements_by_css_selector('a'):
         if config['SKYPE']['conversation_title'] in a.text:
-            a.click()
+            driver.execute_script('arguments[0].click()', a)
     time.sleep(7)
     # click on the last textarea
-    driver.find_elements_by_css_selector('#textarea-bindings textarea')[-1].click()
+    driver.execute_script('arguments[0].click()', driver.find_elements_by_css_selector('#textarea-bindings textarea')[-1])
     time.sleep(7)
     ActionChains(driver).send_keys(message).send_keys('\n').perform()
     time.sleep(7)
@@ -76,29 +76,29 @@ def send_order(driver, order_url):
         now = datetime.datetime.now()
     driver.get(order_url)
     time.sleep(7)
-    driver.find_element_by_css_selector('#hd-grpEntry-left-submit1Id').click()
+    driver.execute_script('arguments[0].click()', driver.find_element_by_css_selector('#hd-grpEntry-left-submit1Id'))
     time.sleep(7)
-    driver.find_element_by_css_selector('#cartPointer').click()
+    driver.execute_script('arguments[0].click()', driver.find_element_by_css_selector('#cartPointer'))
     time.sleep(7)
-    driver.find_element_by_css_selector('#h-cartcontent-conf-119').click()
+    driver.execute_script('arguments[0].click()', driver.find_element_by_css_selector('#h-cartcontent-conf-119'))
     time.sleep(7)
-    driver.find_element_by_css_selector('#h-cartsum-checkout').click()
+    driver.execute_script('arguments[0].click()', driver.find_element_by_css_selector('#h-cartsum-checkout'))
     time.sleep(7)
-    driver.find_element_by_css_selector('#h-chkaddr-mainAddrId').click()
+    driver.execute_script('arguments[0].click()', driver.find_element_by_css_selector('#h-chkaddr-mainAddrId'))
     time.sleep(7)
-    driver.find_element_by_css_selector('#h-chkpay-kittyOptionNoId').click()
+    driver.execute_script('arguments[0].click()', driver.find_element_by_css_selector('#h-chkpay-kittyOptionNoId'))
     time.sleep(7)
-    driver.find_element_by_css_selector('#h-chktime-mainTimeId').click()
+    driver.execute_script('arguments[0].click()', driver.find_element_by_css_selector('#h-chktime-mainTimeId'))
     time.sleep(7)
     if not config['TEST']:
-        driver.find_element_by_css_selector('#h-checkout-sendOrderBtnId').click()
+        driver.execute_script('arguments[0].click()', driver.find_element_by_css_selector('#h-checkout-sendOrderBtnId'))
     time.sleep(7)
 
 
 def extract_orders(driver):
     driver.get('https://www.hipmenu.ro/#history/back/')
     time.sleep(7)
-    driver.find_element_by_css_selector('#h-order-history-list-content div').click()
+    driver.execute_script('arguments[0].click()', driver.find_element_by_css_selector('#h-order-history-list-content div'))
     time.sleep(7)
     return driver.execute_script(config['ORDERS_SCRIPT'])
 
