@@ -14,7 +14,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 config = importlib.import_module('config')
 config = {key: getattr(config, key) for key in dir(config) if key.isupper()}
-logging.basicConfig(format='%(asctime)s - %(message)s')
+logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 
 
 def login_to_facebook(driver):
