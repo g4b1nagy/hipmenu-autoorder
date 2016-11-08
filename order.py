@@ -1,6 +1,6 @@
 import datetime
 import importlib
-import json
+import logging
 import time
 import traceback
 
@@ -12,6 +12,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 config = importlib.import_module('config')
 config = {key: getattr(config, key) for key in dir(config) if key.isupper()}
+logging.basicConfig(format='%(asctime)s - %(message)s')
 
 
 def login_to_facebook(driver):
@@ -58,6 +59,7 @@ def login_to_skype(driver):
 
 
 def send_skype_message(driver, message):
+    # click on the conversation
     for a in driver.find_elements_by_css_selector('a'):
         if config['SKYPE']['conversation_title'] in a.text:
             driver.execute_script('arguments[0].click()', a)
@@ -69,11 +71,14 @@ def send_skype_message(driver, message):
     time.sleep(7)
 
 
-def send_order(driver, order_url):
+def wait():
     now = datetime.datetime.now()
-    while now.hour < 10 or now.minute < 55:
+    while now.hour < config['HIPMENU']['order_time']['hour'] or now.minute < config['HIPMENU']['order_time']['minute']:
         time.sleep(60)
         now = datetime.datetime.now()
+
+
+def send_order(driver, order_url):
     driver.get(order_url)
     time.sleep(7)
     driver.execute_script('arguments[0].click()', driver.find_element_by_css_selector('#hd-grpEntry-left-submit1Id'))
@@ -95,14 +100,6 @@ def send_order(driver, order_url):
     time.sleep(7)
 
 
-def extract_orders(driver):
-    driver.get('https://www.hipmenu.ro/#history/back/')
-    time.sleep(7)
-    driver.execute_script('arguments[0].click()', driver.find_element_by_css_selector('#h-order-history-list-content div'))
-    time.sleep(7)
-    return driver.execute_script(config['ORDERS_SCRIPT'])
-
-
 def send_sms(message):
     payload = {
         'api_key': config['NEXMO']['api_key'],
@@ -117,38 +114,36 @@ def send_sms(message):
 
 if __name__ == '__main__':
     try:
-        with open('orders.json', 'w') as f:
-            f.write('[]')
-        print(datetime.datetime.now())
+        logging.info('starting up')
         display = Display(visible=0, size=(1366, 768))
         display.start()
         driver = webdriver.Chrome(config['CHROMEDRIVER_PATH'])
         driver.set_window_size(1366, 768)
         driver.implicitly_wait(10)
-        print('login to facebook')
+        logging.info('login to facebook')
         login_to_facebook(driver)
-        print('login to hipmenu')
+        logging.info('login to hipmenu')
         login_to_hipmenu(driver)
-        print('get order url')
+        logging.info('get order url')
         order_url = get_order_url(driver)
-        print(order_url)
-        message = 'Apetit => {} Order will be sent at 10:55. This is an automated message via https://github.com/g4b1nagy/hipmenu-autoorder'.format(order_url)
-        print('login to skype')
+        logging.info('order_url: {}'.format(order_url))
+        message = '{} => {} Order will be sent at {}:{}. This is an automated message via https://github.com/g4b1nagy/hipmenu-autoorder'.format(
+            config['HIPMENU']['restaurant_name'],
+            order_url,
+            config['HIPMENU']['order_time']['hour'],
+            config['HIPMENU']['order_time']['minute'],
+        )
+        logging.info('login to skype')
         login_to_skype(driver)
-        print('send skype message')
+        logging.info('send skype message')
         send_skype_message(driver, message)
-        send_sms('hipMenu Skype message sent.')
-        print('send order')
+        logging.info('wait for it')
+        wait()
+        logging.info('send order')
         send_order(driver, order_url)
-        send_sms('hipMenu order sent.')
-        orders = extract_orders(driver)
-        orders.sort(key=lambda x: x['name'])
-        print(orders)
-        with open('orders.json', 'w') as f:
-            f.write(json.dumps(orders))
+        logging.info('THE END')
     except Exception as e:
         print(traceback.format_exc())
-        send_sms('Error sending hipMenu order.')
     finally:
         driver.quit()
         display.stop()
